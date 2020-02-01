@@ -15,6 +15,7 @@ define(
 				"../../sound/attack/attack (6).wav",
 				"../../sound/attack/attack (7).wav",
 				"../../sound/attack/attack (8).wav",
+				"../../sound/attack/attack (9).wav",
 			],
 
 			bang   : [
