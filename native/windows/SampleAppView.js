@@ -6,7 +6,7 @@ define(
 	],
 	function () {
 		var db = {
-			attack : [
+			attack  : [
 				"../../sound/attack/attack (1).wav",
 				"../../sound/attack/attack (2).wav",
 				"../../sound/attack/attack (3).wav",
@@ -18,39 +18,44 @@ define(
 				"../../sound/attack/attack (9).wav",
 			],
 
-			bang   : [
+			bang    : [
 				"../../sound/bang/bang (1).wav",
 				"../../sound/bang/bang (2).wav",
 			],
-			copy   : [
+			copy    : [
 				"../../sound/copy/copy (2).wav",
 				"../../sound/copy/copy (1).wav",
 			],
-			clear  : [
+			coverme : [
+				"../../sound/cover/cover.wav",
+			],
+			help    : [
+				"../../sound/help/help (1).wav",
+				"../../sound/help/help (2).wav",
+				"../../sound/help/help (3).wav",
+				"../../sound/help/help (4).wav",
+				"../../sound/help/help (5).wav",
+			],
+			moving  : [
+				"../../sound/moving/moving.wav",
+			],
+			clear   : [
 				"../../sound/clear/clear (1).wav",
 				"../../sound/clear/clear (2).wav",
 			],
 		};
 
-		var dynamicVoice = new Howl({
-			src      : "../../sound/bang/A15O030W021.wav",
-			preload  : false,
-			autoplay : false,
-			loop     : false,
-			volume   : 1.0,
-			onload   : function () {
-				dynamicVoice.play();
-			},
-		});
+		Howler.usingWebAudio = true;
+		Howler.autoSuspend = false;
 
 		function generateRandomNumber (max) {
 			return Math.floor(Math.random() * max);
 		}
 
 		function playDynamic () {
-			dynamicVoice.load();
+			dynamicVoice.play();
 		}
-		var throttle = _.throttle(playDynamic, 1200);
+
 		class SampleAppView {
 			constructor () {
 				// Methods:
@@ -74,21 +79,52 @@ define(
 			init () {
 				//this._hideExitMinimizeModal();
 				window.onclick = function (event) {
+					var dynamicVoice = new Howl({
+						src      : db.attack,
+						preload  : false,
+						autoplay : false,
+						loop     : false,
+						html5    : false,
+						volume   : 1.0,
+						onend    : function () {
+							Howler.unload();
+						},
+					});
 					if (event.target.innerText === "ATTACK") {
-						let x = generateRandomNumber(db.attack.length - 1);
+						let x = generateRandomNumber(db.attack.length);
 						dynamicVoice._src = db.attack[x];
-
-						throttle();
+						dynamicVoice.load();
+						dynamicVoice.play();
 					} else if (event.target.innerText === "USE BANG") {
-						let x = generateRandomNumber(db.bang.length - 1);
+						let x = generateRandomNumber(db.bang.length);
 						dynamicVoice._src = db.bang[x];
 
-						throttle();
+						dynamicVoice.load();
+						dynamicVoice.play();
+					} else if (event.target.innerText === "MOVING") {
+						let x = generateRandomNumber(db.moving.length);
+						dynamicVoice._src = db.moving[x];
+						dynamicVoice.load();
+
+						playDynamic();
 					} else if (event.target.innerText === "COPY") {
-						let x = generateRandomNumber(db.copy.length - 1);
+						let x = generateRandomNumber(db.copy.length);
 						dynamicVoice._src = db.copy[x];
 
-						throttle();
+						dynamicVoice.load();
+						dynamicVoice.play();
+					} else if (event.target.innerText === "HELP") {
+						let x = generateRandomNumber(db.help.length);
+						dynamicVoice._src = db.help[x];
+
+						dynamicVoice.load();
+						dynamicVoice.play();
+					} else if (event.target.innerText === "COVER ME") {
+						let x = generateRandomNumber(db.coverme.length);
+						dynamicVoice._src = db.coverme[x];
+
+						dynamicVoice.load();
+						playDynamic();
 					} else {
 					}
 				}.bind(this);
